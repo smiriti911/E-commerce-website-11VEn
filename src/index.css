@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhai+2&family=Bebas+Neue&family=Bree+Serif&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Caveat&display=swap');
+
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-script: "Bricolage Grotesque";
+  --font-heading: "Bebas Neue";
+}
