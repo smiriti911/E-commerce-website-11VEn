@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
 
 // Replace with your actual Supabase project URL and API key
 const SUPABASE_URL;
