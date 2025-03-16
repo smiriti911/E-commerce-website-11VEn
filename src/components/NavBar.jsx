@@ -191,14 +191,14 @@ const NavBar = () => {
               className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
                onClick={() => setIsDropdownOpen(false)}
             >
-              Logins
+              Login
             </NavLink>
             <NavLink
               to="/sign-up"
               className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
                onClick={() => setIsDropdownOpen(false)}
             >
-              Signups
+              Signup
             </NavLink>
           </div>
               )}
