@@ -25,14 +25,14 @@ const ProductItem = ({ image, title, price, id }) => {
         ease: "power3.out",
         zIndex: 9999, // Ensure it appears above other elements
         onComplete: () => {
-          gsap.set(card, { opacity: 1, x: 0, y: 0, zIndex: "auto" });
+          gsap.set(card, { opacity: 1, x: 0, y: 0, zIndex: 10 });
         },
       });
     }
   };
 
   return (
-    <div className="relative z-50" ref={cardRef} style={{ position: "relative" }}>
+    <div className="relative" ref={cardRef} style={{ position: "relative" }}>
       <div className="block group">
         <div className="bg-white dark:bg-neutral-950 rounded-xl shadow-md dark:shadow-neutral-800 p-4 sm:p-5 flex flex-col items-center gap-3 transition-transform transform hover:scale-105 hover:shadow-lg ">
           <Link to={`/product/${id}`} className="w-full h-30 flex justify-center items-center overflow-hidden">

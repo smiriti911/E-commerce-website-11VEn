@@ -13,6 +13,8 @@ import PlaceOrder from "./pages/PlaceOrder.jsx";
 import Orders from "./pages/Orders.jsx";
 import WishList from "./pages/WishList.jsx";
 import SignUp from "./pages/SignUp.jsx"
+import ResetPassword from "./pages/Reset.jsx"
+import ForgotPassword from "./pages/ForgotPassword.jsx";
 
 const router= createBrowserRouter([
   {
@@ -28,10 +30,13 @@ const router= createBrowserRouter([
       { path: "/wishlist", element: <WishList /> },
       { path: "/login", element: <Login /> },
       { path: "/sign-up", element: <SignUp /> },
+
       { path: "/place-order", element: <PlaceOrder /> },
       { path: "/orders", element: <Orders /> },
     ],
-  }
+  },
+  { path: "/reset", element: <ForgotPassword/> },
+  { path: "/reset-password", element: <ResetPassword/> },
 ])
 
 createRoot(document.getElementById("root")).render(

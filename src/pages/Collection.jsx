@@ -62,7 +62,7 @@ const Collection = () => {
           <div className="flex-1">
             <p
               onClick={() => setShowFilter(!showFilter)}
-              className="my-2 text-xl flex items-center cursor-pointer gap-2 text-rose-800 dark:text-rose-300 font-heading tracking-wider px-1"
+              className="my-2 text-xl flex items-center cursor-pointer gap-2 text-rose-800 dark:text-rose-300 font-heading tracking-wider px-1 "
             >
               Filters
               <IoIosArrowForward

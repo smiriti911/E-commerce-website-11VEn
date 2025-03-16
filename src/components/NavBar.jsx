@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { logo } from "../assets/assets";
 import { FiSearch } from "react-icons/fi";
@@ -7,15 +7,66 @@ import { IoIosHeart } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
 import { ShopContext } from "../context/ShopContext";
 import Toggle from "./Toggle";
+import supabase from "../supabaseClient";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { showSearch, setShowSearch, totalCart } = useContext(ShopContext); // Access totalCart from context
   const location = useLocation();
+  const menuRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const [user, setUser] = useState(null); // Track user authentication state
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data?.user);
+    };
+
+    fetchUser();
+
+    // Listen for authentication changes
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user || null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setIsDropdownOpen(false);
+    navigate("/login"); // Redirect to login after logout
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Check if the current page is not "/collection"
   const shouldShowSearch = location.pathname === "/collection";
@@ -30,10 +81,11 @@ const NavBar = () => {
             className="hidden md:block sm:w-15 md:w-25 p-2 transform transition-transform duration-300 ease-in-out group-hover:rotate-360"
           />
         </NavLink>
-     
+
         {/* Hamburger menu on mobile (left side) */}
+
         <div className="md:hidden flex items-center justify-start cursor-pointer z-10">
-          <div className="relative group">
+          <div className="relative group" ref={menuRef}>
             <button
               onClick={toggleMenu}
               className="text-lime-950 focus:outline-none"
@@ -46,7 +98,10 @@ const NavBar = () => {
             </button>
             {/* Dropdown Menu */}
             {isMenuOpen && (
-              <div className="absolute top-full left-0 bg-lime-200 shadow-md rounded-md w-40">
+              <div
+                className="absolute top-full left-0 bg-lime-200 shadow-md rounded-md w-40"
+                ref={menuRef}
+              >
                 <NavLink
                   onClick={toggleMenu}
                   to="/"
@@ -123,7 +178,7 @@ const NavBar = () => {
 
       {/* Right side items */}
       <div className="flex items-center gap-3 ml-2 mb-3">
-      <Toggle />
+        <Toggle />
         {/* Conditionally render the Search icon only on /collection page */}
         {shouldShowSearch && (
           <div className="relative group">
@@ -156,25 +211,46 @@ const NavBar = () => {
 
         {/* User Icon with Fixed Dropdown Position */}
         <div className="relative group">
-          <button className="p-2">
+          <button className="p-2" onClick={toggleDropdown}>
             <IoPersonSharp className="text-2xl cursor-pointer text-lime-800 transform transition-transform duration-300 ease-in-out group-hover:scale-120 group-focus:scale-120 dark:text-lime-200 group-hover:rotate-12 " />
           </button>
 
           {/* Dropdown Menu */}
-          <div className="absolute right-0 top-full mt-2 bg-lime-200 shadow-lg min-w-[150px] w-auto rounded-md text-left font-semibold opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-            <NavLink
-              to="/login"
-              className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
+          {isDropdownOpen && (
+            <div
+              ref={dropdownRef}
+              className="absolute right-0 top-full mt-2 bg-lime-200 shadow-lg min-w-[150px] w-auto rounded-md text-left font-semibold transition-all duration-300"
             >
-              Login
-            </NavLink>
-            <NavLink
-              to="/sign-up"
-              className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
-            >
-              Signup
-            </NavLink>
-          </div>
+              {user ? (
+                <>
+                  <p className="px-4 py-2 text-lime-950">Hi, {user.email}</p>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-lime-950 hover:bg-lime-100"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <NavLink
+                    to="/login"
+                    className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    Login
+                  </NavLink>
+                  <NavLink
+                    to="/sign-up"
+                    className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    Signup
+                  </NavLink>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </nav>
