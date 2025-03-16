@@ -11,47 +11,18 @@ import supabase from "../supabaseClient";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { showSearch, setShowSearch, totalCart } = useContext(ShopContext); // Access totalCart from context
+  const { showSearch, setShowSearch, totalCart } = useContext
+  (ShopContext); // Access totalCart from context
   const location = useLocation();
   const menuRef = useRef(null);
   const dropdownRef = useRef(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const [user, setUser] = useState(null); // Track user authentication state
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data?.user);
-    };
-
-    fetchUser();
-
-    // Listen for authentication changes
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
-  };
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setIsDropdownOpen(false);
-    navigate("/login"); // Redirect to login after logout
   };
 
   useEffect(() => {
@@ -63,11 +34,11 @@ const NavBar = () => {
         setIsDropdownOpen(false);
       }
     };
-
+  
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  
   // Check if the current page is not "/collection"
   const shouldShowSearch = location.pathname === "/collection";
 
@@ -83,9 +54,9 @@ const NavBar = () => {
         </NavLink>
 
         {/* Hamburger menu on mobile (left side) */}
-
+    
         <div className="md:hidden flex items-center justify-start cursor-pointer z-10">
-          <div className="relative group" ref={menuRef}>
+          <div className="relative group"ref={menuRef}>
             <button
               onClick={toggleMenu}
               className="text-lime-950 focus:outline-none"
@@ -98,10 +69,7 @@ const NavBar = () => {
             </button>
             {/* Dropdown Menu */}
             {isMenuOpen && (
-              <div
-                className="absolute top-full left-0 bg-lime-200 shadow-md rounded-md w-40"
-                ref={menuRef}
-              >
+              <div className="absolute top-full left-0 bg-lime-200 shadow-md rounded-md w-40" ref={menuRef}>
                 <NavLink
                   onClick={toggleMenu}
                   to="/"
@@ -217,40 +185,23 @@ const NavBar = () => {
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
-            <div
-              ref={dropdownRef}
-              className="absolute right-0 top-full mt-2 bg-lime-200 shadow-lg min-w-[150px] w-auto rounded-md text-left font-semibold transition-all duration-300"
+          <div ref={dropdownRef}  className="absolute right-0 top-full mt-2 bg-lime-200 shadow-lg min-w-[150px] w-auto rounded-md text-left font-semibold transition-all duration-300">
+            <NavLink
+              to="/login"
+              className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
+               onClick={() => setIsDropdownOpen(false)}
             >
-              {user ? (
-                <>
-                  <p className="px-4 py-2 text-lime-950">Hi, {user.email}</p>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-lime-950 hover:bg-lime-100"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <NavLink
-                    to="/login"
-                    className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
-                    onClick={() => setIsDropdownOpen(false)}
-                  >
-                    Login
-                  </NavLink>
-                  <NavLink
-                    to="/sign-up"
-                    className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
-                    onClick={() => setIsDropdownOpen(false)}
-                  >
-                    Signup
-                  </NavLink>
-                </>
+              Login
+            </NavLink>
+            <NavLink
+              to="/sign-up"
+              className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
+               onClick={() => setIsDropdownOpen(false)}
+            >
+              Signups
+            </NavLink>
+          </div>
               )}
-            </div>
-          )}
         </div>
       </div>
     </nav>
