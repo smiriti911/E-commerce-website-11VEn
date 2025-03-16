@@ -30,13 +30,13 @@ const router= createBrowserRouter([
       { path: "/wishlist", element: <WishList /> },
       { path: "/login", element: <Login /> },
       { path: "/sign-up", element: <SignUp /> },
-
+      { path: "/reset", element: <ForgotPassword/> },
+      { path: "/reset-password", element: <ResetPassword/> },
       { path: "/place-order", element: <PlaceOrder /> },
       { path: "/orders", element: <Orders /> },
     ],
   },
-  { path: "/reset", element: <ForgotPassword/> },
-  { path: "/reset-password", element: <ResetPassword/> },
+  
 ])
 
 createRoot(document.getElementById("root")).render(
