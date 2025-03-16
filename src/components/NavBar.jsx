@@ -191,7 +191,7 @@ const NavBar = () => {
               className="block px-4 py-2 text-lime-950 hover:bg-lime-100"
                onClick={() => setIsDropdownOpen(false)}
             >
-              Login
+              Logins
             </NavLink>
             <NavLink
               to="/sign-up"
