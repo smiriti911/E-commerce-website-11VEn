@@ -22,7 +22,6 @@ const App = () => {
       } else if (!publicRoutes.includes(location.pathname)) {
         // ✅ Only redirect if NOT on a public route
         setUser(null);
-        navigate("/login");
       }
     };
 
@@ -31,9 +30,7 @@ const App = () => {
     // Listen for authentication changes
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
-      if (!session?.user && !publicRoutes.includes(location.pathname)) {
-        navigate("/login");
-      }
+
     });
 
     return () => {
