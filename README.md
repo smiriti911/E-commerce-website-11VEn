@@ -70,18 +70,3 @@ This project is a modern **eCommerce frontend** built with **Next.js** and **Tai
 
 ---
 
-## ⚡ Installation & Setup  
-
-1. Clone the repository:  
-```sh
-   git clone https://github.com/your-repo/ecom-frontend.git
-   cd ecom-frontend
-```
-2.Install dependencies:
-```sh
-  npm install
-```
-3.Start the development server:
-```sh
-  npm run dev
-```
