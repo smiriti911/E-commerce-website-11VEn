@@ -1,30 +1,37 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import supabase from "../supabaseClient"; // Import Supabase client
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
-    // Authenticate with Supabase
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const response = await fetch("https://fakestoreapi.com/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
 
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      navigate("/"); // Navigate to home page on successful login
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token); // Store JWT token
+        navigate("/"); // Redirect to Home
+      } else {
+        alert("Invalid username or password");
+      }
+    } catch (error) {
+      alert("An error occurred. Please try again.");
+    } finally {
       setLoading(false);
     }
   };
@@ -32,21 +39,18 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-neutral-950">
       <div className="bg-white dark:bg-neutral-950 p-8 rounded-lg shadow-2xl dark:shadow-neutral-800 shadow-rose-300 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-rose-700 dark:text-rose-200">
-          Login
-        </h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-rose-700 dark:text-rose-200">Login</h2>
         <form onSubmit={handleSubmit}>
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <div className="mb-4">
             <label className="block text-rose-700 dark:text-rose-200 text-sm font-bold mb-2">
-              Email
+              Username
             </label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-rose-800 dark:border-rose-200 text-rose-800 dark:text-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300"
-              placeholder="Enter your email"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-3 py-2 border border-rose-800 dark:border-rose-200 text-rose-800 dark:text-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-200 dark:focus:ring-rose-300"
+              placeholder="Enter your username"
               required
             />
           </div>
@@ -58,7 +62,7 @@ const Login = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-rose-800 dark:border-rose-200 text-rose-800 dark:text-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300"
+              className="w-full px-3 py-2 border border-rose-800 dark:border-rose-200 text-rose-800 dark:text-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-200 dark:focus:ring-rose-300"
               placeholder="Enter your password"
               required
             />
@@ -73,15 +77,9 @@ const Login = () => {
         </form>
         <p className="mt-4 text-center dark:text-white">
           Don't have an account?{" "}
-          <NavLink to="/sign-up" className="text-lime-600 dark:text-rose-400 hover:underline">
+          <a href="/sign-up" className="text-lime-600 dark:text-rose-400 hover:underline">
             Sign up
-          </NavLink>
-        </p>
-        <p className="mt-4 text-center dark:text-white">
-          Forgot password?{" "}
-          <NavLink to="/reset" className="text-lime-600 dark:text-rose-400 hover:underline">
-            Reset password
-          </NavLink>
+          </a>
         </p>
       </div>
     </div>

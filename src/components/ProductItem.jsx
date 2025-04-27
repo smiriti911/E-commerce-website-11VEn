@@ -43,7 +43,7 @@ const ProductItem = ({ image, title, price, id }) => {
             <p className="text-lime-950 text-lg sm:text-xl font-medium font-heading tracking-widest dark:text-lime-200">{currency} {price.toFixed(2)}</p>
           </Link>
           <div className="flex justify-end w-full gap-2">
-            {/* <Link to={`/product/${id}`} className="w-full bg-lime-200 text-lime-950 hover:text-rose-900 px-4 py-2 rounded-lg hover:bg-red-300 transition font-heading tracking-widest text-lg cursor-pointer items-center justify-center text-center">Buy Now</Link> */}
+            <Link to={`/product/${id}`} className="w-full bg-lime-200 text-lime-950 hover:text-rose-900 px-4 py-2 rounded-lg hover:bg-red-300 transition font-heading tracking-widest text-lg cursor-pointer items-center justify-center text-center">Buy Now</Link>
             <button onClick={addToWishlist} className={` ${isInWishlist ? "text-red-600" : "text-rose-300"} hover:text-red-600 focus:text-red-600 transition-all duration-200 active:scale-90`}>
               <IoIosHeart className="text-xl sm:text-3xl" />
             </button>
